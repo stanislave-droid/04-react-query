@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import css from "./App.module.css";
 import "modern-normalize";
 import fetchMovies from "../../services/movieService";
 import type { Movie } from "../../types/movie";
 import SearchBar from "../SearchBar/SearchBar";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -23,12 +23,6 @@ function App() {
     enabled: searchedName !== "",
     placeholderData: keepPreviousData,
   });
-
-  useEffect(() => {
-    if (data?.results.length === 0) {
-      toast.error("No movies found for your request.");
-    }
-  }, [searchedName, data]);
 
   const handleSubmit = (input: string) => {
     setSearchedName(input);
