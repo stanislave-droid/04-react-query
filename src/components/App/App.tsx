@@ -28,7 +28,7 @@ function App() {
     if (data?.results.length === 0) {
       toast.error("No movies found for your request.");
     }
-  }, [searchedName]);
+  }, [searchedName, data]);
 
   const handleSubmit = (input: string) => {
     setSearchedName(input);
