@@ -1,6 +1,5 @@
 import axios from "axios";
 import type { Movie } from "../types/movie";
-import toast from "react-hot-toast";
 
 interface fetchMoviesProps {
   page: number;
@@ -25,10 +24,6 @@ export default async function fetchMovies(props: fetchMoviesProps) {
       },
     },
   );
-
-  if (data.results.length === 0) {
-    toast.error("No movies found for your request.");
-  }
 
   return { results: data.results, total_pages: data.total_pages };
 }
