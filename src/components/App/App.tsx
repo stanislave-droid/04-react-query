@@ -10,12 +10,22 @@ import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import MovieModal from "../MovieModal/MovieModal";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import Pagination from "../Pagination/Pagination";
+import ReactPaginateModule from "react-paginate";
+import type { ReactPaginateProps } from "react-paginate";
+import type { ComponentType } from "react";
 
 function App() {
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [searchedName, setSearchedName] = useState<string>("");
+
+  type ModuleWithDefault<T> = { default: T };
+
+  const ReactPaginate = (
+    ReactPaginateModule as unknown as ModuleWithDefault<
+      ComponentType<ReactPaginateProps>
+    >
+  ).default;
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["movies", searchedName, currentPage],
@@ -54,10 +64,16 @@ function App() {
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
       {data && data.total_pages > 1 && (
-        <Pagination
+        <ReactPaginate
+          pageCount={data.total_pages}
+          pageRangeDisplayed={5}
+          marginPagesDisplayed={1}
           onPageChange={handlePageChange}
-          totalPages={data.total_pages}
-          currentPage={currentPage}
+          forcePage={currentPage - 1}
+          containerClassName={css.pagination}
+          activeClassName={css.active}
+          nextLabel="→"
+          previousLabel="←"
         />
       )}
       {data && data.results.length > 0 && (

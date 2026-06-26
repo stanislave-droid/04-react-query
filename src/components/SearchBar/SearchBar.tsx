@@ -1,36 +1,20 @@
 import toast from "react-hot-toast";
 import css from "./SearchBar.module.css";
-import { Field, Form, Formik, type FormikHelpers } from "formik";
-import * as Yup from "yup";
 
 interface SearchBarProps {
   onSubmit: (input: string) => void;
 }
 
-interface FormValues {
-  query: string;
-}
-
-const initialValues: FormValues = {
-  query: "",
-};
-
-const validationSchema = Yup.object({
-  query: Yup.string().required("Please enter your search query."),
-});
-
 export default function SearchBar(props: SearchBarProps) {
-  const handleSubmit = (
-    { query }: FormValues,
-    actions: FormikHelpers<FormValues>,
-  ) => {
+  const handleSubmit = (formData: FormData) => {
+    const query = formData.get("query") as string;
+
     if (query.trim().length === 0) {
       toast.error("Please enter your search query.");
       return;
     }
 
     props.onSubmit(query.trim());
-    actions.resetForm();
   };
 
   return (
@@ -44,25 +28,20 @@ export default function SearchBar(props: SearchBarProps) {
         >
           Powered by TMDB
         </a>
-        <Formik
-          initialValues={initialValues}
-          validationSchema={validationSchema}
-          onSubmit={handleSubmit}
-        >
-          <Form className={css.form}>
-            <Field
-              className={css.input}
-              type="text"
-              name="query"
-              autoComplete="off"
-              placeholder="Search movies..."
-              autoFocus
-            />
-            <button className={css.button} type="submit">
-              Search
-            </button>
-          </Form>
-        </Formik>
+
+        <form className={css.form} action={handleSubmit}>
+          <input
+            className={css.input}
+            type="text"
+            name="query"
+            autoComplete="off"
+            placeholder="Search movies..."
+            autoFocus
+          />
+          <button className={css.button} type="submit">
+            Search
+          </button>
+        </form>
       </div>
     </header>
   );
